@@ -151,7 +151,9 @@ class _TimerSwitchState extends State<TimerSwitch> {
               ],
             );
           } else {
-            return CircularProgressIndicator();
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         });
   }

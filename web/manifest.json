@@ -1,6 +1,6 @@
 {
-    "name": "web_flutter_switches_timer",
-    "short_name": "web_flutter_switches_timer",
+    "name": "Timed Switches",
+    "short_name": "Timed Switches",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
