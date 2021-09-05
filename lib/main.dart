@@ -24,13 +24,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TimerSwitch extends StatefulWidget {
-  const TimerSwitch({Key? key}) : super(key: key);
-
-  @override
-  _TimerSwitchState createState() => _TimerSwitchState();
-}
-
 Future getTimeOf() async {
   var _timer1 = await http
       .get(Uri.parse('http://192.168.100.100:100/controlAC/getTimer/1'));
@@ -74,6 +67,13 @@ Future getTimeOf() async {
       _time2.first.toString() +
       "," +
       _time2.last.toString();
+}
+
+class TimerSwitch extends StatefulWidget {
+  const TimerSwitch({Key? key}) : super(key: key);
+
+  @override
+  _TimerSwitchState createState() => _TimerSwitchState();
 }
 
 bool _animating = true;
@@ -202,6 +202,37 @@ class _TimerBoxState extends State<TimerBox> {
 
   final FixedExtentScrollController scrollerHr;
   final FixedExtentScrollController scrollerMin;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _valueCheckrefresh();
+    super.initState();
+  }
+
+  void _valueCheckrefresh() async {
+    getTimeOf().then((value) async {
+      // print('received this value:');
+      // print(value);
+      List _updateVals = value.toString().split(',');
+      _animating = true;
+      await scrollerHr.animateToItem(
+          timerId == 1 ? int.parse(_updateVals[0]) : int.parse(_updateVals[2]),
+          duration: Duration(milliseconds: 100),
+          curve: Curves.easeIn);
+      await scrollerMin.animateToItem(
+          timerId == 1 ? int.parse(_updateVals[1]) : int.parse(_updateVals[3]),
+          duration: Duration(milliseconds: 100),
+          curve: Curves.easeIn);
+      _animating = false;
+      // setState(() {});
+      Future.delayed(Duration(seconds: 1), () {
+        print('calling the function');
+        _valueCheckrefresh();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
